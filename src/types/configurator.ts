@@ -1,4 +1,4 @@
-export type ModuleType = 'base' | 'drawer' | 'sink' | 'cooktop' | 'oven' | 'fridge'
+export type ModuleType = 'base' | 'drawer' | 'cooktop' | 'oven' | 'fridge' | 'grill'
 
 export type FinishId =
   | 'lac-w' | 'lac-g' | 'lac-s' | 'lac-b' | 'lac-t' | 'oak' | 'marmo'
@@ -23,6 +23,7 @@ export interface KitchenModule {
   fuel: FuelType
   ovenFinish: OvenFinish
   fridgeHeight: FridgeHeight
+  hasSink: boolean
 }
 
 export interface ModuleTypeMeta {

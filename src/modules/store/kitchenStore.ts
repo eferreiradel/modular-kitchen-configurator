@@ -26,13 +26,14 @@ function makeModule(type: ModuleType): KitchenModule {
     fuel: 'induzione',
     ovenFinish: 'acciaio',
     fridgeHeight: 'standard',
+    hasSink: false,
   }
 }
 
 const initial: KitchenModule[] = [
   makeModule('base'),
   makeModule('cooktop'),
-  makeModule('sink'),
+  { ...makeModule('base'), hasSink: true },
   makeModule('base'),
 ]
 
@@ -47,6 +48,7 @@ interface KitchenState {
 
   selectModule: (id: string) => void
   setModuleCfg: (key: ModuleCfgKey, value: ModuleCfgVal) => void
+  setHasSink: (value: boolean) => void
   setType: (type: ModuleType) => void
   addModule: (type: ModuleType) => void
   setWorktop: (id: WorktopId) => void
@@ -65,6 +67,13 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
     set((s) => ({
       modules: s.modules.map((m) =>
         m.id === s.selectedId ? { ...m, [key]: value } : m
+      ),
+    })),
+
+  setHasSink: (value) =>
+    set((s) => ({
+      modules: s.modules.map((m) =>
+        m.id === s.selectedId ? { ...m, hasSink: value } : m
       ),
     })),
 
@@ -95,4 +104,4 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
   setView: (view) => set({ view }),
 }))
 
-export const EXCLUSIVE_TYPES = new Set<ModuleType>(['sink', 'cooktop', 'oven', 'fridge'])
+export const EXCLUSIVE_TYPES = new Set<ModuleType>(['cooktop', 'oven', 'fridge', 'grill'])

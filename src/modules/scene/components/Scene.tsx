@@ -2,44 +2,8 @@
 
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Environment, useGLTF } from '@react-three/drei'
-import * as THREE from 'three'
-import { GLTF } from 'three-stdlib'
-import { useKitchenStore } from '@/modules/store'
-import { KitchenModuleUnit } from './KitchenModuleUnit'
-
-type GLTFResult = GLTF & {
-  nodes: { mod_base_: THREE.Mesh; mod_drawer: THREE.Mesh }
-  materials: {}
-}
-
-function ModulesGroup() {
-  const { modules, selectedId } = useKitchenStore()
-  const { nodes } = useGLTF('/scene.glb') as GLTFResult
-
-  // Calcola larghezza reale della mesh dalla bounding box
-  const geo = nodes.mod_base_.geometry
-  if (!geo.boundingBox) geo.computeBoundingBox()
-  const box = geo.boundingBox!
-  const moduleWidth = box.max.x - box.min.x
-
-  const totalWidth = modules.length * moduleWidth
-  const offsetX = -totalWidth / 2 + moduleWidth / 2
-
-  return (
-    <group position={[offsetX, 0, 0]}>
-      {modules.map((mod, i) => (
-        <KitchenModuleUnit
-          key={mod.id}
-          module={mod}
-          index={i}
-          moduleWidth={moduleWidth}
-          selected={mod.id === selectedId}
-        />
-      ))}
-    </group>
-  )
-}
+import { OrbitControls, Environment } from '@react-three/drei'
+import { KitchenModules } from './KitchenModules'
 
 export function Scene() {
   return (
@@ -59,7 +23,7 @@ export function Scene() {
           shadow-mapSize={[2048, 2048]}
         />
         <Environment preset="apartment" />
-        <ModulesGroup />
+        <KitchenModules />
         <OrbitControls
           enablePan={false}
           minDistance={1.5}

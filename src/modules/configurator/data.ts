@@ -7,16 +7,16 @@ import type {
 } from '@/types/configurator'
 
 export const MODULE_ORDER: ModuleType[] = [
-  'base', 'drawer', 'sink', 'cooktop', 'oven', 'fridge',
+  'base', 'drawer', 'cooktop', 'oven', 'fridge', 'grill',
 ]
 
 export const TYPES: Record<ModuleType, ModuleTypeMeta> = {
   base:    { label: 'Base',    desc: 'Empty cabinet · 2 doors',       exclusive: false },
   drawer:  { label: 'Drawer',  desc: '3-drawer unit',                 exclusive: false },
-  sink:    { label: 'Sink',    desc: 'Integrated basin cutout',        exclusive: true  },
   cooktop: { label: 'Cooktop', desc: '2 or 4 burner',                  exclusive: true  },
   oven:    { label: 'Oven',    desc: 'Built-in oven',                  exclusive: true  },
   fridge:  { label: 'Fridge',  desc: 'Integrated refrigerator',        exclusive: true  },
+  grill:   { label: 'Grill',   desc: 'Built-in grill',                 exclusive: true  },
 }
 
 export const FINISHES: FinishOption[] = [

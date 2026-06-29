@@ -5,10 +5,10 @@ import type { ModuleType } from '@/types/configurator'
 const ICONS: Record<ModuleType, string> = {
   base:    '▭',
   drawer:  '☰',
-  sink:    '◎',
   cooktop: '⊕',
   oven:    '▣',
   fridge:  '▬',
+  grill:   '▦',
 }
 
 interface Props {

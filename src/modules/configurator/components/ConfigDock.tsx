@@ -22,7 +22,7 @@ export function ConfigDock() {
   const t = useTranslations('configurator')
   const {
     view, modules, selectedId, worktop,
-    selectModule, setModuleCfg, setType, setWorktop, setView,
+    selectModule, setModuleCfg, setHasSink, setType, setWorktop, setView,
   } = useKitchenStore()
 
   const selMod = modules.find((m) => m.id === selectedId) ?? null
@@ -209,6 +209,34 @@ export function ConfigDock() {
               ))}
             </div>
           </Section>
+
+          {/* Sink */}
+          {(selMod?.type === 'base' || selMod?.type === 'drawer') && (
+            <Section label={t('sink.title')}>
+              <button
+                onClick={() => setHasSink(!selMod.hasSink)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: S.md,
+                  width: '100%', textAlign: 'left',
+                  padding: `${S.md}px ${S.md}px`,
+                  border: 0, borderRadius: 11, cursor: 'pointer',
+                  background: selMod.hasSink ? 'rgba(150,210,0,0.16)' : 'rgba(0,0,0,0.035)',
+                }}
+              >
+                <span style={{
+                  width: 32, height: 18, flexShrink: 0, borderRadius: 9999, padding: 2,
+                  display: 'flex', alignItems: 'center',
+                  justifyContent: selMod.hasSink ? 'flex-end' : 'flex-start',
+                  background: selMod.hasSink ? '#bef000' : 'rgba(0,0,0,0.15)',
+                }}>
+                  <span style={{ width: 14, height: 14, borderRadius: '50%', background: '#fff' }} />
+                </span>
+                <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 450, color: '#1c1c1a' }}>
+                  {t('sink.add')}
+                </span>
+              </button>
+            </Section>
+          )}
 
           {/* Front finish */}
           <Section label={t('ui.frontFinish')}>

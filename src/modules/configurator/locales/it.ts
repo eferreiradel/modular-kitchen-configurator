@@ -6,10 +6,10 @@ const it = {
   types: {
     base:    { label: 'Base',     desc: 'Anta vuota · 2 ante' },
     drawer:  { label: 'Cassetti', desc: 'Blocco 3 cassetti' },
-    sink:    { label: 'Lavello',  desc: 'Vasca integrata a incasso' },
     cooktop: { label: 'Piano',    desc: '2 o 4 fuochi' },
     oven:    { label: 'Forno',    desc: 'Forno da incasso' },
     fridge:  { label: 'Frigo',    desc: 'Frigorifero integrato' },
+    grill:   { label: 'Grill',    desc: 'Grill da incasso' },
   },
   finishes: {
     'lac-w': 'Laccato bianco',
@@ -74,6 +74,10 @@ const it = {
     height:   'Altezza',
     standard: 'Standard',
     tall:     'Alto',
+  },
+  sink: {
+    title: 'Lavello',
+    add:   'Aggiungi lavello',
   },
 } as const
 

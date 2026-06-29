@@ -6,10 +6,10 @@ const en = {
   types: {
     base:    { label: 'Base',    desc: 'Empty cabinet · 2 doors' },
     drawer:  { label: 'Drawer',  desc: '3-drawer unit' },
-    sink:    { label: 'Sink',    desc: 'Integrated basin cutout' },
     cooktop: { label: 'Cooktop', desc: '2 or 4 burner' },
     oven:    { label: 'Oven',    desc: 'Built-in oven' },
     fridge:  { label: 'Fridge',  desc: 'Integrated refrigerator' },
+    grill:   { label: 'Grill',   desc: 'Built-in grill' },
   },
   finishes: {
     'lac-w': 'White lacquer',
@@ -74,6 +74,10 @@ const en = {
     height:   'Height',
     standard: 'Standard',
     tall:     'Tall',
+  },
+  sink: {
+    title: 'Sink',
+    add:   'Add sink',
   },
 } as const
 

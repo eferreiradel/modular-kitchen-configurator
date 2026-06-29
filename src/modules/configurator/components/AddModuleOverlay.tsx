@@ -26,7 +26,7 @@ export function AddModuleOverlay() {
   }
 
   const baseTypes = (['base', 'drawer'] as ModuleType[]).map(buildRow)
-  const exclTypes = (['sink', 'cooktop', 'oven', 'fridge'] as ModuleType[]).map(buildRow)
+  const exclTypes = (['cooktop', 'oven', 'fridge'] as ModuleType[]).map(buildRow)
 
   return (
     <div
