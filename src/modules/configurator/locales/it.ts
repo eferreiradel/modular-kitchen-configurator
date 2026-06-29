@@ -37,6 +37,7 @@ const it = {
     alphaVersion:     'alpha v1 · {count}/6',
     addModule:        'Aggiungi modulo',
     moduleType:       'Tipo modulo',
+    topMaterial:      'Materiale top',
     frontFinish:      'Finitura ante',
     handle:           'Maniglia',
     worktop:          'Piano di lavoro',

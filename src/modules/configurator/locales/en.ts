@@ -37,6 +37,7 @@ const en = {
     alphaVersion:     'alpha v1 · {count}/6',
     addModule:        'Add module',
     moduleType:       'Module type',
+    topMaterial:      'Top material',
     frontFinish:      'Front finish',
     handle:           'Handle',
     worktop:          'Worktop',

@@ -3,7 +3,7 @@
 import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment } from '@react-three/drei'
-import { KitchenModules } from './KitchenModules'
+import { KitchenScene } from './KitchenScene'
 
 export function Scene() {
   return (
@@ -23,7 +23,7 @@ export function Scene() {
           shadow-mapSize={[2048, 2048]}
         />
         <Environment preset="apartment" />
-        <KitchenModules />
+        <KitchenScene />
         <OrbitControls
           enablePan={false}
           minDistance={1.5}

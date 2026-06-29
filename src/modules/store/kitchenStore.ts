@@ -13,6 +13,7 @@ import type {
 } from '@/types/configurator'
 
 export const MAX_MODULES = 6
+export const DEFAULT_TOP_MATERIAL = 'base'
 
 let _counter = 0
 function makeModule(type: ModuleType): KitchenModule {
@@ -45,6 +46,8 @@ interface KitchenState {
   modules: KitchenModule[]
   selectedId: string
   worktop: WorktopId
+  /** materiale del top, globale per tutta la cucina — non ha senso un top misto pannello per pannello */
+  topMaterial: string
 
   selectModule: (id: string) => void
   setModuleCfg: (key: ModuleCfgKey, value: ModuleCfgVal) => void
@@ -52,6 +55,7 @@ interface KitchenState {
   setType: (type: ModuleType) => void
   addModule: (type: ModuleType) => void
   setWorktop: (id: WorktopId) => void
+  setTopMaterial: (id: string) => void
   setView: (view: ConfigView) => void
 }
 
@@ -60,6 +64,7 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
   modules: initial,
   selectedId: initial[1].id,
   worktop: 'q-bianco',
+  topMaterial: DEFAULT_TOP_MATERIAL,
 
   selectModule: (id) => set({ selectedId: id }),
 
@@ -100,6 +105,8 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
   },
 
   setWorktop: (id) => set({ worktop: id }),
+
+  setTopMaterial: (id) => set({ topMaterial: id }),
 
   setView: (view) => set({ view }),
 }))

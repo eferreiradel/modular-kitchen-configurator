@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { useKitchenStore } from '@/modules/store'
-import { Scene } from '@/modules/scene'
+import { Scene, MaterialsDebugCard } from '@/modules/scene'
 import { MIN_HEIGHT, STAGE_RIGHT_CLEARANCE, DOCK_INSET_RIGHT } from '../layout'
 import { ConfigDock } from './ConfigDock'
 import { AddModuleOverlay } from './AddModuleOverlay'
@@ -55,6 +55,9 @@ export function KitchenConfigurator() {
           {t('hud.subtitle', { count: modules.length })}
         </span>
       </div>
+
+      {/* ── Debug materiali/nodi del glb ── */}
+      <MaterialsDebugCard />
 
       {/* ── Config dock ── */}
       <ConfigDock />

@@ -5,6 +5,7 @@ import { useKitchenStore, MAX_MODULES, EXCLUSIVE_TYPES } from '@/modules/store'
 import { FINISHES, HANDLES, WORKTOPS, MODULE_ORDER, finishById, worktopById } from '../data'
 import { DOCK_INSET_RIGHT } from '../layout'
 import { ModulePlaceholder } from './ModulePlaceholder'
+import { useTopMaterialVariants } from '@/modules/scene'
 import type { ModuleType } from '@/types/configurator'
 
 const S = {
@@ -21,10 +22,11 @@ const S = {
 export function ConfigDock() {
   const t = useTranslations('configurator')
   const {
-    view, modules, selectedId, worktop,
-    selectModule, setModuleCfg, setHasSink, setType, setWorktop, setView,
+    view, modules, selectedId, worktop, topMaterial,
+    selectModule, setModuleCfg, setHasSink, setType, setWorktop, setTopMaterial, setView,
   } = useKitchenStore()
 
+  const topMaterials = useTopMaterialVariants()
   const selMod = modules.find((m) => m.id === selectedId) ?? null
   const selIdx = selMod ? modules.indexOf(selMod) + 1 : 0
   const selSeen = selMod
@@ -211,7 +213,7 @@ export function ConfigDock() {
           </Section>
 
           {/* Sink */}
-          {(selMod?.type === 'base' || selMod?.type === 'drawer') && (
+          {selMod?.type === 'base' && (
             <Section label={t('sink.title')}>
               <button
                 onClick={() => setHasSink(!selMod.hasSink)}
@@ -316,6 +318,31 @@ export function ConfigDock() {
                   >
                     <span style={{ width: 16, height: 16, flexShrink: 0, borderRadius: 5, border: '1px solid rgba(0,0,0,0.18)', background: w.sw }} />
                     <span style={{ fontFamily: 'var(--font-sans)', fontSize: 11.5, fontWeight: 500, color: 'rgba(0,0,0,0.78)', lineHeight: 1.05 }}>{t(`worktops.${w.id}`)}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </Section>
+
+          {/* Top material — globale, generato dai materiali mat_top_* del .blend */}
+          <Section label={<>{t('ui.topMaterial')} <span style={{ color: 'rgba(0,0,0,0.3)' }}>{t('ui.worktopGlobal')}</span></>}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: S.sm }}>
+              {topMaterials.map((id) => {
+                const on = topMaterial === id
+                return (
+                  <button
+                    key={id}
+                    onClick={() => setTopMaterial(id)}
+                    style={{
+                      padding: '6px 12px',
+                      border: on ? '1px solid rgba(110,150,0,0.65)' : '1px solid rgba(0,0,0,0.08)',
+                      borderRadius: 9999, cursor: 'pointer',
+                      background: on ? 'rgba(150,210,0,0.18)' : 'rgba(0,0,0,0.035)',
+                      fontFamily: 'var(--font-sans)', fontSize: 11.5, fontWeight: 500,
+                      color: on ? '#1a1a18' : 'rgba(0,0,0,0.62)',
+                    }}
+                  >
+                    {id}
                   </button>
                 )
               })}
