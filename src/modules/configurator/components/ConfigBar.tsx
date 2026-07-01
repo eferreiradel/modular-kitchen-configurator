@@ -185,19 +185,6 @@ export function ConfigBar() {
             </div>
           </Section>
 
-          {selMod.type === 'cooktop' && (
-            <Section label={t('cooktop.title')}>
-              <SegRow label={t('cooktop.burners')}>
-                {(['2', '4'] as const).map((n) => (
-                  <SegBtn key={n} on={selMod.burners === n} onClick={() => setModuleCfg('burners', n)}>{n}</SegBtn>
-                ))}
-              </SegRow>
-              <SegRow label={t('cooktop.heat')}>
-                <SegBtn on={selMod.fuel === 'gas'} onClick={() => setModuleCfg('fuel', 'gas')}>{t('cooktop.gas')}</SegBtn>
-                <SegBtn on={selMod.fuel === 'induzione'} onClick={() => setModuleCfg('fuel', 'induzione')}>{t('cooktop.induction')}</SegBtn>
-              </SegRow>
-            </Section>
-          )}
 
 
 

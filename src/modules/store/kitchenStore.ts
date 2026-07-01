@@ -124,4 +124,4 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
   setView: (view) => set({ view }),
 }))
 
-export const EXCLUSIVE_TYPES = new Set<ModuleType>(['cooktop', 'oven', 'fridge', 'grill'])
+export const EXCLUSIVE_TYPES = new Set<ModuleType>(['oven', 'fridge', 'grill'])
