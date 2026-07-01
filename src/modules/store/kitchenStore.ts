@@ -34,8 +34,8 @@ function makeModule(type: ModuleType): KitchenModule {
 
 const initial: KitchenModule[] = [
   makeModule('base'),
-  makeModule('cooktop'),
-  { ...makeModule('base'), hasSink: true },
+  makeModule('base'),
+  makeModule('base'),
   makeModule('base'),
 ]
 

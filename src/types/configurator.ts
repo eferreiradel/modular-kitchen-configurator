@@ -1,4 +1,4 @@
-export type ModuleType = 'base' | 'drawer' | 'cooktop' | 'oven' | 'fridge' | 'grill'
+export type ModuleType = 'base' | 'drawer'  | 'oven' | 'fridge' | 'grill'
 
 export type TopFinishId = 'marmo-b' | 'marmo-n' | 'granito' | 'cemento' | 'acciaio' | 'porcellanato'
 

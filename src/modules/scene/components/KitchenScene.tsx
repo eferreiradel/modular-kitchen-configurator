@@ -57,14 +57,13 @@ const ROW_Z = 0
 const BODY_KEYS_BY_TYPE: Record<ModuleType, NodeKey[]> = {
   base:    ['base', 'base_1'],
   drawer:  ['drawer', 'drawer_1'],
-  cooktop: ['base', 'base_1'],
   oven:    ['base', 'base_1'],
   fridge:  ['fridge', 'fridge_1', 'fridge_3', 'fridge_4', 'fridge_5', 'fridge_6'],
   grill:   ['grill', 'grill_1', 'grill_2', 'grill_3', 'grill_4', 'grill_5', 'grill_6', 'grill_7', 'grill_8', 'grill_9'],
 }
 
 /** Tipi che montano mod_sink_off come piano liscio */
-const HAS_SMOOTH_TOP = new Set<ModuleType>(['base', 'drawer', 'cooktop', 'oven'])
+const HAS_SMOOTH_TOP = new Set<ModuleType>(['base', 'drawer', 'oven'])
 
 /** fridge/grill usano i materiali nativi del .blend per la maggior parte dei mesh */
 const BODY_USES_OWN_MATERIAL = new Set<ModuleType>(['fridge', 'grill'])
@@ -74,7 +73,7 @@ const TOP_KEY_BY_TYPE: Partial<Record<ModuleType, NodeKey>> = {
   fridge: 'fridge_6',
 }
 
-const SINK_CAPABLE_TYPES = new Set<ModuleType>(['base', 'drawer', 'cooktop', 'oven'])
+const SINK_CAPABLE_TYPES = new Set<ModuleType>(['base', 'drawer', 'oven'])
 
 function showsSink(module: KitchenModule): boolean {
   return SINK_CAPABLE_TYPES.has(module.type) && module.hasSink
