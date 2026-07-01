@@ -11,20 +11,15 @@ export function Scene() {
       camera={{ position: [0, 1.2, 3.5], fov: 45 }}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       dpr={[1, 2]}
-      shadows
       style={{ width: '100%', height: '100%' }}
     >
       <Suspense fallback={null}>
-        <ambientLight intensity={0.6} />
-        <directionalLight
-          position={[3, 6, 4]}
-          intensity={1.2}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-        <Environment preset="apartment" />
+        <ambientLight intensity={1} />
+        <directionalLight position={[3, 6, 4]} intensity={1.8} />
+        <Environment preset="city" environmentIntensity={0.8} />
         <KitchenScene />
         <OrbitControls
+          target={[0, 0.45, 0]}
           enablePan={false}
           minDistance={1.5}
           maxDistance={6}

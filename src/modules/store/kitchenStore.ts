@@ -5,15 +5,17 @@ import type {
   ConfigView,
   FinishId,
   HandleId,
-  WorktopId,
   BurnersCount,
   FuelType,
   OvenFinish,
   FridgeHeight,
+  TopFinishId,
 } from '@/types/configurator'
+import { DEFAULT_TOP_FINISH } from '@/modules/configurator/data'
+
+export const DEFAULT_FINISH: FinishId = 'lac-w'
 
 export const MAX_MODULES = 6
-export const DEFAULT_TOP_MATERIAL = 'base'
 
 let _counter = 0
 function makeModule(type: ModuleType): KitchenModule {
@@ -21,7 +23,6 @@ function makeModule(type: ModuleType): KitchenModule {
   return {
     id: 'm' + _counter,
     type,
-    finish: 'lac-w',
     handle: 'scomparsa',
     burners: '4',
     fuel: 'induzione',
@@ -38,24 +39,24 @@ const initial: KitchenModule[] = [
   makeModule('base'),
 ]
 
-type ModuleCfgKey = 'finish' | 'handle' | 'burners' | 'fuel' | 'ovenFinish' | 'fridgeHeight'
-type ModuleCfgVal = FinishId | HandleId | BurnersCount | FuelType | OvenFinish | FridgeHeight
+type ModuleCfgKey = 'handle' | 'burners' | 'fuel' | 'ovenFinish' | 'fridgeHeight'
+type ModuleCfgVal = HandleId | BurnersCount | FuelType | OvenFinish | FridgeHeight
 
 interface KitchenState {
   view: ConfigView
   modules: KitchenModule[]
   selectedId: string
-  worktop: WorktopId
-  /** materiale del top, globale per tutta la cucina — non ha senso un top misto pannello per pannello */
-  topMaterial: string
+  globalFinish: FinishId
+  globalTopFinish: TopFinishId
 
   selectModule: (id: string) => void
   setModuleCfg: (key: ModuleCfgKey, value: ModuleCfgVal) => void
   setHasSink: (value: boolean) => void
   setType: (type: ModuleType) => void
   addModule: (type: ModuleType) => void
-  setWorktop: (id: WorktopId) => void
-  setTopMaterial: (id: string) => void
+  removeModule: (id: string) => void
+  setFinish: (id: FinishId) => void
+  setTopFinish: (id: TopFinishId) => void
   setView: (view: ConfigView) => void
 }
 
@@ -63,8 +64,8 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
   view: 'overview',
   modules: initial,
   selectedId: initial[1].id,
-  worktop: 'q-bianco',
-  topMaterial: DEFAULT_TOP_MATERIAL,
+  globalFinish: DEFAULT_FINISH,
+  globalTopFinish: DEFAULT_TOP_FINISH,
 
   selectModule: (id) => set({ selectedId: id }),
 
@@ -104,9 +105,21 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
     set((s) => ({ modules: [...s.modules, m], selectedId: m.id, view: 'overview' }))
   },
 
-  setWorktop: (id) => set({ worktop: id }),
+  removeModule: (id) => {
+    const s = get()
+    if (s.modules.length <= 1) return
+    const idx = s.modules.findIndex((m) => m.id === id)
+    if (idx === -1) return
+    const modules = s.modules.filter((m) => m.id !== id)
+    const nextSelected = s.selectedId === id
+      ? modules[Math.min(idx, modules.length - 1)].id
+      : s.selectedId
+    set({ modules, selectedId: nextSelected })
+  },
 
-  setTopMaterial: (id) => set({ topMaterial: id }),
+  setFinish: (id) => set({ globalFinish: id }),
+
+  setTopFinish: (id) => set({ globalTopFinish: id }),
 
   setView: (view) => set({ view }),
 }))

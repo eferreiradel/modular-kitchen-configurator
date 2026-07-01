@@ -3,11 +3,12 @@ import type {
   ModuleTypeMeta,
   FinishOption,
   HandleOption,
-  WorktopOption,
+  TopFinishOption,
+  TopFinishId,
 } from '@/types/configurator'
 
 export const MODULE_ORDER: ModuleType[] = [
-  'base', 'drawer', 'cooktop', 'oven', 'fridge', 'grill',
+  'base', 'drawer', /* 'cooktop', */ /* 'oven', */ 'fridge', 'grill',
 ]
 
 export const TYPES: Record<ModuleType, ModuleTypeMeta> = {
@@ -29,23 +30,27 @@ export const FINISHES: FinishOption[] = [
   { id: 'marmo', label: 'Marmo',          sw: 'radial-gradient(circle at 35% 30%,#fff,#dad8d3)', panel: '#e6e3dd', top: '#f0eee9', stroke: '#33312b' },
 ]
 
+export const TOP_FINISHES: TopFinishOption[] = [
+  { id: 'marmo-b',      label: 'Marmo bianco',    color: '#e8e6e0', sw: 'radial-gradient(circle at 35% 30%, #fff, #d8d5cf)' },
+  { id: 'marmo-n',      label: 'Marmo nero',       color: '#2c2c2a', sw: 'radial-gradient(circle at 35% 30%, #3a3a38, #1a1a18)' },
+  { id: 'granito',      label: 'Granito antracite',color: '#3e3d3b', sw: 'radial-gradient(circle at 40% 40%, #4a4845, #2e2d2b)' },
+  { id: 'cemento',      label: 'Cemento',          color: '#9a9890', sw: '#9a9890' },
+  { id: 'acciaio',      label: 'Acciaio inox',     color: '#c8c6c2', sw: 'linear-gradient(135deg, #d4d2ce, #b8b6b2)' },
+  { id: 'porcellanato', label: 'Porcellanato',     color: '#f0ede6', sw: '#f0ede6' },
+]
+
+export const DEFAULT_TOP_FINISH: TopFinishId = 'marmo-b'
+
+export function topFinishById(id: string): TopFinishOption {
+  return TOP_FINISHES.find((t) => t.id === id) ?? TOP_FINISHES[0]
+}
+
 export const HANDLES: HandleOption[] = [
   { id: 'vista',     label: 'A vista',     desc: 'Visible bar handle' },
   { id: 'scomparsa', label: 'A scomparsa', desc: 'Recessed grip'      },
   { id: 'gola',      label: 'Gola',        desc: 'Integrated groove'  },
 ]
 
-export const WORKTOPS: WorktopOption[] = [
-  { id: 'q-bianco', label: 'Quarzo bianco',  sw: '#eef0ef', top: '#f6f7f6' },
-  { id: 'q-grigio', label: 'Quarzo grigio',  sw: '#b9bcbd', top: '#cfd1d2' },
-  { id: 'inox',     label: 'Acciaio inox',   sw: 'linear-gradient(135deg,#d6dade,#aeb4ba)', top: '#dfe3e6' },
-  { id: 'legno',    label: 'Legno massello', sw: 'linear-gradient(135deg,#b08a5c,#8a6840)', top: '#bd9866' },
-]
-
 export function finishById(id: string): FinishOption {
   return FINISHES.find((f) => f.id === id) ?? FINISHES[0]
-}
-
-export function worktopById(id: string): WorktopOption {
-  return WORKTOPS.find((w) => w.id === id) ?? WORKTOPS[0]
 }

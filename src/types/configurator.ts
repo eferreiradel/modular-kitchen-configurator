@@ -1,11 +1,18 @@
 export type ModuleType = 'base' | 'drawer' | 'cooktop' | 'oven' | 'fridge' | 'grill'
 
+export type TopFinishId = 'marmo-b' | 'marmo-n' | 'granito' | 'cemento' | 'acciaio' | 'porcellanato'
+
+export interface TopFinishOption {
+  id: TopFinishId
+  label: string
+  color: string
+  sw: string
+}
+
 export type FinishId =
   | 'lac-w' | 'lac-g' | 'lac-s' | 'lac-b' | 'lac-t' | 'oak' | 'marmo'
 
 export type HandleId = 'vista' | 'scomparsa' | 'gola'
-
-export type WorktopId = 'q-bianco' | 'q-grigio' | 'inox' | 'legno'
 
 export type BurnersCount = '2' | '4'
 export type FuelType = 'gas' | 'induzione'
@@ -17,7 +24,6 @@ export type ConfigView = 'overview' | 'add' | 'detail'
 export interface KitchenModule {
   id: string
   type: ModuleType
-  finish: FinishId
   handle: HandleId
   burners: BurnersCount
   fuel: FuelType
@@ -45,11 +51,4 @@ export interface HandleOption {
   id: HandleId
   label: string
   desc: string
-}
-
-export interface WorktopOption {
-  id: WorktopId
-  label: string
-  sw: string
-  top: string
 }
