@@ -10,7 +10,7 @@ import * as THREE from 'three'
 import { useGLTF, useTexture } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import { useKitchenStore } from '@/modules/store'
-import { finishById, topFinishById } from '@/modules/configurator/data'
+import { finishById } from '@/modules/configurator/data'
 import type { KitchenModule, ModuleType } from '@/types/configurator'
 
 /** Matcap per il metallo del lavello */
@@ -32,6 +32,7 @@ type GLTFResult = GLTF & {
     sink_on_3: THREE.Mesh
     fridge: THREE.Mesh
     fridge_1: THREE.Mesh
+    fridge_2: THREE.Mesh
     fridge_3: THREE.Mesh
     fridge_4: THREE.Mesh
     fridge_5: THREE.Mesh
@@ -87,7 +88,7 @@ const BODY_KEYS_BY_TYPE: Record<ModuleType, NodeKey[]> = {
   drawer:  ['drawer', 'drawer_1'],
   cooktop: ['base', 'base_1'],
   oven:    ['base', 'base_1'],
-  fridge:  ['fridge', 'fridge_1', 'fridge_3', 'fridge_4', 'fridge_5', 'fridge_6'],
+  fridge:  ['fridge', 'fridge_1', 'fridge_2', 'fridge_3', 'fridge_4', 'fridge_5', 'fridge_6'],
   grill:   ['grill', 'grill_1', 'grill_2', 'grill_3', 'grill_4', 'grill_5', 'grill_6', 'grill_7', 'grill_8', 'grill_9'],
 }
 
@@ -96,11 +97,6 @@ const HAS_SMOOTH_TOP = new Set<ModuleType>(['base', 'drawer', 'cooktop', 'oven']
 
 /** fridge/grill hanno materiali compositi propri del .blend */
 const BODY_USES_OWN_MATERIAL = new Set<ModuleType>(['fridge', 'grill'])
-
-/** Mesh del piano di lavoro integrato nel modello — riceve topColor invece del materiale nativo */
-const TOP_KEY_BY_TYPE: Partial<Record<ModuleType, NodeKey>> = {
-  fridge: 'fridge_6',
-}
 
 const SINK_CAPABLE_TYPES = new Set<ModuleType>(['base', 'drawer', 'cooktop', 'oven'])
 
@@ -113,25 +109,20 @@ const SINK_ON_OFFSET: [number, number, number] = [-0.025, 0.727, 0.126]
 
 interface ModuleBBox {
   width: number
-  depth: number
-  height: number
   offsetX: number
   offsetZ: number
 }
 
 function moduleBBox(geometries: THREE.BufferGeometry[]): ModuleBBox {
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity, minZ = Infinity, maxZ = -Infinity
+  let minX = Infinity, maxX = -Infinity, minZ = Infinity
   for (const geo of geometries) {
     if (!geo.boundingBox) geo.computeBoundingBox()
     const box = geo.boundingBox!
     minX = Math.min(minX, box.min.x)
     maxX = Math.max(maxX, box.max.x)
-    minY = Math.min(minY, box.min.y)
-    maxY = Math.max(maxY, box.max.y)
     minZ = Math.min(minZ, box.min.z)
-    maxZ = Math.max(maxZ, box.max.z)
   }
-  return { width: maxX - minX, depth: maxZ - minZ, height: maxY - minY, offsetX: -minX, offsetZ: ROW_Z - minZ }
+  return { width: maxX - minX, offsetX: -minX, offsetZ: ROW_Z - minZ }
 }
 
 function SinkOn({
@@ -146,14 +137,14 @@ function SinkOn({
   return (
     <group position={SINK_ON_OFFSET}>
       {/* vasca */}
-      <mesh geometry={nodes.sink_on.geometry} material={materials.sink} />
+      <mesh geometry={nodes.sink_on.geometry} material={materials.sink} castShadow receiveShadow />
       {/* pannello top forato — stesso materiale del piano liscio */}
-      <mesh geometry={nodes.sink_on_1.geometry}>
+      <mesh geometry={nodes.sink_on_1.geometry} castShadow receiveShadow>
         <meshMatcapMaterial matcap={bodyMatcap} color={topColor} />
       </mesh>
       {/* rubinetteria */}
-      <mesh geometry={nodes.sink_on_2.geometry} material={materials['Outdoor_Kitchen_02_Material #137']} />
-      <mesh geometry={nodes.sink_on_3.geometry}>
+      <mesh geometry={nodes.sink_on_2.geometry} material={materials['Outdoor_Kitchen_02_Material #137']} castShadow receiveShadow />
+      <mesh geometry={nodes.sink_on_3.geometry} castShadow receiveShadow>
         <meshMatcapMaterial matcap={metalMatcap} />
       </mesh>
     </group>
@@ -181,19 +172,14 @@ function ModuleInstance({
     <group position={[x, ROW_Y, 0]}>
       <group position={[offsetX, 0, offsetZ]}>
         {/* corpo: ante e struttura */}
-        {bodyKeys.map((key) => {
-          const isTopMesh = TOP_KEY_BY_TYPE[module.type] === key
-          return (
-            <mesh key={key} geometry={nodes[key].geometry} material={useOwnMaterial && !isTopMesh ? nodes[key].material : undefined}>
-              {(!useOwnMaterial || isTopMesh) && (
-                <meshMatcapMaterial matcap={bodyMatcap} color={isTopMesh ? topColor : frontColor} />
-              )}
-            </mesh>
-          )
-        })}
+        {bodyKeys.map((key) => (
+          <mesh key={key} geometry={nodes[key].geometry} material={useOwnMaterial ? nodes[key].material : undefined} castShadow receiveShadow>
+            {!useOwnMaterial && <meshMatcapMaterial matcap={bodyMatcap} color={frontColor} />}
+          </mesh>
+        ))}
         {/* piano liscio (mod_sink_off) — visibile solo quando !hasSink */}
         {hasSmoothTop && !module.hasSink && (
-          <mesh geometry={nodes.mod_sink_off.geometry}>
+          <mesh geometry={nodes.mod_sink_off.geometry} castShadow receiveShadow>
             <meshMatcapMaterial matcap={bodyMatcap} color={topColor} />
           </mesh>
         )}
@@ -208,13 +194,12 @@ function ModuleInstance({
 
 export function KitchenScene() {
   const modules = useKitchenStore((s) => s.modules)
-  const selectedId = useKitchenStore((s) => s.selectedId)
   const globalFinish = useKitchenStore((s) => s.globalFinish)
-  const globalTopFinish = useKitchenStore((s) => s.globalTopFinish)
   const { nodes, materials } = useGLTF('/scene.glb') as unknown as GLTFResult
 
-  const frontColor = useMemo(() => finishById(globalFinish).panel, [globalFinish])
-  const topColor = useMemo(() => topFinishById(globalTopFinish).color, [globalTopFinish])
+  const finish = useMemo(() => finishById(globalFinish), [globalFinish])
+  const frontColor = finish.panel
+  const topColor = finish.top
 
   const bboxByType = useMemo(() => {
     const result = {} as Record<ModuleType, ModuleBBox>
@@ -231,35 +216,17 @@ export function KitchenScene() {
   }, [nodes])
 
   const totalWidth = modules.reduce((sum, mod) => sum + bboxByType[mod.type].width, 0)
-
-  // calcola posizioni una volta sola così il piano indicatore conosce x e width del modulo selezionato
-  const positions = useMemo(() => {
-    let cursor = -totalWidth / 2
-    return modules.map((mod) => {
-      const { width, depth, height, offsetX, offsetZ } = bboxByType[mod.type]
-      const x = cursor
-      cursor += width
-      return { id: mod.id, x, width, depth, height, offsetX, offsetZ }
-    })
-  }, [modules, bboxByType, totalWidth])
-
-  const selPos = positions.find((p) => p.id === selectedId)
+  let cursor = -totalWidth / 2
 
   return (
     <group>
-      {/* wireframe bbox del modulo selezionato */}
-      {selPos && (
-        <lineSegments position={[selPos.x + selPos.width / 2, selPos.height / 2, selPos.depth / 2]}>
-          <edgesGeometry args={[new THREE.BoxGeometry(selPos.width, selPos.height, selPos.depth)]} />
-          <lineBasicMaterial color="#76ff00" />
-        </lineSegments>
-      )}
-
-      {positions.map(({ id, x, offsetX, offsetZ }) => {
-        const mod = modules.find((m) => m.id === id)!
+      {modules.map((mod) => {
+        const { width, offsetX, offsetZ } = bboxByType[mod.type]
+        const x = cursor
+        cursor += width
         return (
           <ModuleInstance
-            key={id}
+            key={mod.id}
             module={mod}
             nodes={nodes}
             materials={materials}
